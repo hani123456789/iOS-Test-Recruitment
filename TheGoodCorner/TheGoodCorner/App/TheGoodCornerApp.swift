@@ -10,30 +10,16 @@ struct TheGoodCornerApp: App {
             baseURL: APIConfiguration.baseURL
         )
         
-        let remoteDataSource =
-        ListingsRemoteDataSourceImp(
-            apiClient: apiClient
+        // Simple MVVM: inject API client directly into the ViewModel
+        self.viewModel = ListingsViewModel(
+            listingRepository: ListingRepository(apiClient: apiClient, baseURL: APIConfiguration.baseURL), categoriesRepository: CategoriesRepository(apiClient: apiClient)
         )
-        
-        let repository =
-        ListingsRepositoryImp(
-            remoteDataSource: remoteDataSource,
-            baseURL: APIConfiguration.baseURL
-        )
-        
-        let fetchListingsUseCase =
-        FetchListingsUseCaseImp(
-            repository: repository
-        )
-        
-        self.viewModel = ListingsViewModel(fetchListingsUseCase: fetchListingsUseCase)
-        
     }
         
-    
     var body: some Scene {
         WindowGroup {
             ListingsView(viewModel: viewModel)
         }
     }
 }
+
