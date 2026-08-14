@@ -21,43 +21,32 @@ struct ListingsView: View {
         NavigationStack {
             Group {
                 switch viewModel.state {
-                    
                 case .loading:
                     ListingsLoadingView()
-                    
                 case .loaded:
-
                     ScrollView {
-
                         LazyVStack(
                             alignment: .leading,
-                            spacing: 16
-                        ) {
-
+                            spacing: AppSpacing.lg
+                        ){
                             categoryFilter
-
-                            
                             listingsSection(listings: viewModel.displayedListings)
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 24)
+                        .padding(.horizontal, AppSpacing.lg)
+                        .padding(.bottom, AppSpacing.xl)
                     }
                     .background(Color.appBackground)
-                    
                 case .empty:
                     EmptyStateView()
-                    
                 case .error(let error):
-                    ListingsErrorView(errorMessage: error.errorDescription ?? "Something went wrong. Please try again.") {
+                    ListingsErrorView(errorMessage: error.errorDescription ?? AppStrings.Listings.errorTitle) {
                         Task { await viewModel.loadInitialData() }
                     }
-                    
                 case .idle:
                     Color.clear
                 }
             }
-            .navigationTitle("Listings")
-
+            .navigationTitle(AppStrings.Listings.title)
         }
         .task {
             await viewModel.loadInitialData()
@@ -67,14 +56,12 @@ struct ListingsView: View {
     func listingsSection(
         listings: [Listing]
     ) -> some View {
-
-        LazyVStack(spacing: 16) {
-
+        LazyVStack(spacing: AppSpacing.lg) {
             ForEach(listings) { listing in
-
                 NavigationLink {
                     ListingDetailView(
-                        listing: listing
+                        listing: listing,
+                        categoryName: viewModel.categoryName(for: listing.categoryId) ?? ""
                     )
                 } label: {
                     ListingCardView(listing: listing,
@@ -93,7 +80,7 @@ struct ListingsView: View {
             }
             if viewModel.isLoadingNextPage {
                 ProgressView()
-                    .padding(.vertical, 20)
+                    .padding(.vertical, AppSpacing.xl)
             }
             
         }
@@ -103,37 +90,28 @@ struct ListingsView: View {
 private extension ListingsView {
 
     var categoryFilter: some View {
-
         ScrollView(
             .horizontal,
             showsIndicators: false
-        ) {
-
-            HStack(spacing: 8) {
-
-                // MARK: Tous
-
+        ){
+            HStack(spacing: AppSpacing.sm) {
                 categoryButton(
-                    title: "Tous",
+                    title: AppStrings.Listings.allCategories,
                     isSelected:
                         viewModel.selectedCategory == nil
-                ) {
+                ){
                     viewModel.selectAllCategories()
                 }
-
-                // MARK: API Categories
-
                 ForEach(
                     viewModel.categories,
                     id: \.id
-                ) { category in
-
+                ){ category in
                     categoryButton(
                         title: category.name ?? "",
                         isSelected:
                             viewModel.selectedCategory?.id
                             == category.id
-                    ) {
+                    ){
                         Task {
                             await viewModel.selectCategory(category)
                         }
@@ -141,63 +119,32 @@ private extension ListingsView {
                 }
             }
         }
-        .padding(.vertical, 4)
-        .accessibilityElement(
-            children: .contain
-        )
-        .accessibilityLabel(
-            "Filtrer par catégorie"
-        )
+        .padding(.vertical, AppSpacing.xs)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(AppStrings.Listings.categoryFilterAccessibility)
     }
-    
     
         func categoryButton(
             title: String,
             isSelected: Bool,
             action: @escaping () -> Void
         ) -> some View {
-
             Button {
-
                 withAnimation(
                     .easeInOut(duration: 0.2)
-                ) {
+                ){
                     action()
                 }
-
             } label: {
-
                 Text(title)
-                    .font(
-                        .subheadline.weight(
-                            isSelected
-                                ? .semibold
-                                : .regular
-                        )
-                    )
-                    .foregroundStyle(
-                        isSelected
-                            ? .white
-                            : Color.appText
-                    )
-                    .padding(
-                        .horizontal,
-                        16
-                    )
-                    .padding(
-                        .vertical,
-                        9
-                    )
-                    .background(
-                        isSelected
-                            ? Color.appOrange
-                            : Color.white
-                    )
+                    .font(isSelected ? AppTypography.subheadlineSemibold: AppTypography.subheadlineRegular)
+                    .foregroundStyle(isSelected ? .white : Color.appText)
+                    .padding(.horizontal, AppSpacing.md)
+                    .padding(.vertical, AppSpacing.sm)
+                    .background(isSelected ? Color.appOrange : Color.white)
                     .clipShape(Capsule())
                     .overlay {
-
                         if !isSelected {
-
                             Capsule()
                                 .stroke(
                                     Color.appBorder,
@@ -206,13 +153,7 @@ private extension ListingsView {
                         }
                     }
             }
-            .accessibilityLabel(
-                "Catégorie \(title)"
-            )
-            .accessibilityAddTraits(
-                isSelected
-                    ? .isSelected
-                    : []
-            )
+            .accessibilityLabel("\(AppStrings.Listing.category) \(title)")
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
         }
     }

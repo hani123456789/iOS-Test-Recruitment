@@ -10,26 +10,22 @@ import SwiftUI
 struct EmptyStateView: View {
     
     var body: some View {
-        
-        VStack(spacing: 12) {
-            
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 36))
+        VStack(spacing: AppSpacing.md) {
+            Image(systemName: AppIcon.search)
+                .font(AppTypography.emptyStateIcon)
                 .foregroundStyle(Color.appOrange)
-            
-            Text("Aucune annonce")
-                .font(.headline)
-            
+            Text(AppStrings.Listings.emptyTitle)
+                .font(AppTypography.sectionTitle)
             Text(
-                "Aucune annonce ne correspond à cette catégorie."
+                AppStrings.Listings.emptyMessage
             )
-            .font(.subheadline)
+            .font(AppTypography.subheadline)
             .foregroundStyle(
                 Color.appSecondaryText
             )
             .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 60)
+        .padding(.vertical, AppSpacing.geant)
     }
 }

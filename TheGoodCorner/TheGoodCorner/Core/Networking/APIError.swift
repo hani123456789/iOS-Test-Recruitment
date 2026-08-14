@@ -18,22 +18,17 @@ enum APIError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "The request URL is invalid."
-
+            return AppStrings.Errors.invalidURL
         case .invalidResponse:
-            return "The server returned an invalid response."
-
+            return AppStrings.Errors.invalidResponse
         case .httpError(let statusCode):
-            return "The server returned an error (HTTP \(statusCode))."
-
+            return AppStrings.Errors.httpError(statusCode)
         case .decodingError:
-            return "We couldn't read the server response."
-
+            return AppStrings.Errors.decodingError
         case .networkError:
-            return "Unable to connect to the server."
-
+            return AppStrings.Errors.networkError
         case .unknown:
-            return "Something went wrong. Please try again."
+            return AppStrings.Errors.unknown
         }
     }
 }

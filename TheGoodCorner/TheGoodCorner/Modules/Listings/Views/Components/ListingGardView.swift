@@ -5,19 +5,17 @@ struct ListingCardView: View {
     let categoryName: String?
 
     var body: some View {
-        VStack(spacing: 0) {
-
+        VStack {
             imageSection
-
             informationSection
         }
         .frame(maxWidth: .infinity)
         .background(Color.white)
         .clipShape(
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: AppRadius.large)
         )
         .overlay {
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: AppRadius.large)
                 .stroke(
                     Color.appBorder,
                     lineWidth: 1
@@ -36,14 +34,12 @@ struct ListingCardView: View {
 private extension ListingCardView {
 
     var imageSection: some View {
-
+        
         AsyncImage(url: listing.imageURL) { phase in
 
             switch phase {
-
             case .empty:
                 imagePlaceholder
-
             case .success(let image):
                 image
                     .resizable()
@@ -51,7 +47,6 @@ private extension ListingCardView {
 
             case .failure:
                 imagePlaceholder
-
             @unknown default:
                 imagePlaceholder
             }
@@ -59,25 +54,19 @@ private extension ListingCardView {
         .frame(
             maxWidth: .infinity
         )
-        .frame(height: 150)
+        .frame(height: AppDimensions.listingCardImageHeight)
         .clipped()
         .allowsHitTesting(false)
         .accessibilityLabel(
-            "Image de \(listing.title ?? "l'annonce")"
+            "\(AppStrings.Listing.imageAccessibilityPrefix)  \(listing.title ?? "cette annonce" )"
         )
     }
 
     var imagePlaceholder: some View {
 
         ZStack {
-
-            Color(
-                red: 0.94,
-                green: 0.95,
-                blue: 0.96
-            )
-
-            Image(systemName: "photo")
+            Color.appPlaceholderImage
+            Image(systemName: AppIcon.photo)
                 .font(.system(size: 28))
                 .foregroundStyle(
                     Color.appSecondaryText.opacity(0.5)
@@ -86,7 +75,7 @@ private extension ListingCardView {
         .frame(
             maxWidth: .infinity
         )
-        .frame(height: 150)
+        .frame(height: AppDimensions.listingCardImageHeight)
         .accessibilityHidden(true)
     }
 }
@@ -97,38 +86,32 @@ private extension ListingCardView {
 
         VStack(
             alignment: .leading,
-            spacing: 8
-        ) {
-
+            spacing: AppSpacing.sm
+        ){
             HStack(alignment: .center) {
-
                 Text(categoryName ?? "")
                     .font(
-                        .caption.weight(.semibold)
+                        AppTypography.captionSemibold
                     )
                     .foregroundStyle(
                         Color.appSecondaryText
                     )
-
                 Spacer()
-
                 if listing.isUrgent ?? false {
                     urgentBadge
                 }
             }
-
             Text(listing.title ?? "")
                 .font(
-                    .title3.weight(.semibold)
+                    AppTypography.cardTitle
                 )
                 .foregroundStyle(
                     Color.appText
                 )
                 .lineLimit(2)
-
             Text(formattedPrice)
                 .font(
-                    .title2.weight(.bold)
+                    AppTypography.screenTitle
                 )
                 .foregroundStyle(
                     Color.appOrange
@@ -138,7 +121,7 @@ private extension ListingCardView {
             maxWidth: .infinity,
             alignment: .leading
         )
-        .padding(12)
+        .padding(AppSpacing.md)
     }
     
     private var formattedPrice: String {
@@ -149,28 +132,15 @@ private extension ListingCardView {
 private extension ListingCardView {
 
     var urgentBadge: some View {
-
         Label(
-            "Urgent",
-            systemImage: "flame.fill"
+            AppStrings.Listing.urgent,
+            systemImage: AppIcon.urgent
         )
-        .font(
-            .caption.weight(.semibold)
-        )
-        .foregroundStyle(
-            Color.appUrgent
-        )
-        .padding(
-            .horizontal,
-            9
-        )
-        .padding(
-            .vertical,
-            5
-        )
-        .background(
-            Color.appUrgent.opacity(0.08)
-        )
+        .font(AppTypography.captionSemibold)
+        .foregroundStyle(Color.appUrgent)
+        .padding(.horizontal, AppSpacing.sm)
+        .padding(.vertical,AppSpacing.xs)
+        .background(Color.appUrgent.opacity(0.08))
         .clipShape(Capsule())
     }
 }

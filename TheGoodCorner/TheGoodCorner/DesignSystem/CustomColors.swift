@@ -43,4 +43,10 @@ extension Color {
         green: 0.16,
         blue: 0.12
     )
+    
+    static let appPlaceholderImage = Color(
+        red: 0.94,
+        green: 0.95,
+        blue: 0.96
+    )
 }

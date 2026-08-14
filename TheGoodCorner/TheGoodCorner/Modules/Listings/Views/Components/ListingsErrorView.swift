@@ -14,54 +14,41 @@ struct ListingsErrorView: View {
 
     var body: some View {
 
-        VStack(spacing: 16) {
+        VStack(spacing: AppSpacing.lg) {
 
-            Image(
-                systemName: "wifi.exclamationmark"
-            )
+            Image(systemName: AppIcon.networkError)
             .font(.system(size: 40))
             .foregroundStyle(Color.appOrange)
 
-            VStack(spacing: 8) {
-
-                Text("Impossible de charger les annonces")
-                    .font(.headline)
+            VStack(spacing: AppSpacing.sm) {
+                Text(AppStrings.Listings.errorTitle)
+                    .font(AppTypography.sectionTitle)
                     .foregroundStyle(Color.appText)
                     .multilineTextAlignment(.center)
 
                 Text(errorMessage)
-                    .font(.subheadline)
-                    .foregroundStyle(
-                        Color.appSecondaryText
-                    )
+                    .font(AppTypography.subheadline)
+                    .foregroundStyle(Color.appSecondaryText)
                     .multilineTextAlignment(.center)
             }
-
             Button {
                 retry()
             } label: {
 
                 Label(
-                    "Réessayer",
-                    systemImage: "arrow.clockwise"
+                    AppStrings.Listings.retry,
+                    systemImage: AppIcon.refresh
                 )
-                .font(
-                    .subheadline.weight(.semibold)
-                )
+                .font(AppTypography.subheadlineSemibold)
                 .foregroundStyle(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 11)
+                .padding(.horizontal, AppSpacing.xl)
+                .padding(.vertical, AppSpacing.md)
                 .background(Color.appOrange)
                 .clipShape(Capsule())
             }
-            .accessibilityLabel(
-                "Réessayer de charger les annonces"
-            )
+            .accessibilityLabel(AppStrings.Listings.retryAccessibility)
         }
-        .frame(
-            maxWidth: .infinity,
-            minHeight: 300
-        )
-        .padding(.horizontal, 32)
+        .frame(maxWidth: .infinity,minHeight: 300)
+        .padding(.horizontal, AppSpacing.xxl)
     }
 }

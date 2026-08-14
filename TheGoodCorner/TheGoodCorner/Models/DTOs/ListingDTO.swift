@@ -42,28 +42,8 @@ extension ListingDTO {
             categoryId: categoryId,
             isUrgent: isUrgent,
             creationDate: creationDate,
-            thumbnailURL: makeURL(
-                imagesURL?.thumb,
-                baseURL: baseURL
-            ),
-            imageURL: makeURL(
-                imagesURL?.small,
-                baseURL: baseURL
-            )
-        )
-    }
-
-    private func makeURL(
-        _ path: String?,
-        baseURL: URL
-    ) -> URL? {
-        guard let path else {
-            return nil
-        }
-
-        return URL(
-            string: path,
-            relativeTo: baseURL
+            thumbnailURL: AppURL.make(imagesURL?.thumb, baseURL: baseURL),
+            imageURL: AppURL.make(imagesURL?.small, baseURL: baseURL)
         )
     }
 }

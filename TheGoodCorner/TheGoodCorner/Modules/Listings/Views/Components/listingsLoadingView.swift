@@ -9,25 +9,17 @@ import SwiftUI
 struct ListingsLoadingView: View {
 
     var body: some View {
-        VStack(spacing: 12) {
-
+        VStack(spacing: AppSpacing.md) {
             ProgressView()
                 .tint(Color.appOrange)
                 .scaleEffect(1.2)
 
-            Text("Chargement des annonces...")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(
-                    Color.appSecondaryText
-                )
+            Text(AppStrings.Listings.loading)
+                .font(AppTypography.subheadlineSemibold)
+                .foregroundStyle(Color.appSecondaryText)
         }
-        .frame(
-            maxWidth: .infinity,
-            minHeight: 300
-        )
+        .frame(maxWidth: .infinity,minHeight: 300)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            "Chargement des annonces"
-        )
+        .accessibilityLabel(AppStrings.Listings.loading)
     }
 }

@@ -11,14 +11,6 @@ import Combine
 @MainActor
 final class ListingsViewModel: ObservableObject {
 
-    enum State: Equatable {
-        case idle
-        case loading
-        case loaded
-        case empty
-        case error(APIError)
-    }
-
     // MARK: - Published Properties
     
     @Published private(set) var categories: [Category] = []
@@ -42,11 +34,9 @@ final class ListingsViewModel: ObservableObject {
 
     
     var displayedListings: [Listing] {
-
         guard let selectedCategory else {
             return listings
         }
-
         return listings.filter {
             $0.categoryId == selectedCategory.id
         }
@@ -54,7 +44,6 @@ final class ListingsViewModel: ObservableObject {
     
     func loadInitialData() async {
         state = .loading
-
         do {
             async let categoriesTask =
                 categoriesRepository.fetchCategories()
@@ -82,10 +71,8 @@ final class ListingsViewModel: ObservableObject {
             hasMore = response.hasMore
 
             state = listings.isEmpty ? .empty : .loaded
-
         } catch let error as APIError {
             state = .error(error)
-
         } catch {
             state = .error(.unknown)
         }
@@ -96,12 +83,10 @@ final class ListingsViewModel: ObservableObject {
         guard hasMore, !isLoadingNextPage else {
             return
         }
-
         isLoadingNextPage = true
         defer {
             isLoadingNextPage = false
         }
-
         do {
             let nextPage = currentPage + 1
 
@@ -116,14 +101,10 @@ final class ListingsViewModel: ObservableObject {
             let newListings = response.listings.filter {
                 !existingIDs.contains($0.id)
             }
-
             listings.append(contentsOf: newListings)
-
             currentPage = nextPage
             hasMore = response.hasMore
-
             state = .loaded
-
         } catch {
             // Keep the existing listings.
             // You can expose a pagination error/retry state later.
@@ -135,20 +116,15 @@ final class ListingsViewModel: ObservableObject {
         guard category != nil else {
             return
         }
-
         await loadPagesUntilCategoryHasResults()
     }
     
     private func loadPagesUntilCategoryHasResults() async {
-
         while hasMore {
-
             let filtered = displayedListings
-
             if !filtered.isEmpty {
                 return
             }
-
             await loadNextPage()
         }
     }
@@ -159,9 +135,8 @@ final class ListingsViewModel: ObservableObject {
     
     func categoryName(for categoryId: Int?) -> String? {
         guard let categoryId else {
-            return "Tous"
+            return AppStrings.Listings.allCategories
         }
-        return categoryNames[categoryId]  ?? "Tous"
+        return categoryNames[categoryId]  ?? AppStrings.Listings.allCategories
     }
 }
-
