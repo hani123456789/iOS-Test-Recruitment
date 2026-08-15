@@ -37,7 +37,9 @@ struct ListingsView: View {
                     }
                     .background(Color.appBackground)
                 case .empty:
-                    EmptyStateView()
+                    EmptyStateView() {
+                        Task { await viewModel.loadInitialData() }
+                    }
                 case .error(let error):
                     ListingsErrorView(errorMessage: error.errorDescription ?? AppStrings.Listings.errorTitle) {
                         Task { await viewModel.loadInitialData() }
