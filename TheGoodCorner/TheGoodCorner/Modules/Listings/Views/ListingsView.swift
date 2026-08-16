@@ -24,18 +24,25 @@ struct ListingsView: View {
                 case .loading:
                     ListingsLoadingView()
                 case .loaded:
-                    ScrollView {
-                        LazyVStack(
-                            alignment: .leading,
-                            spacing: AppSpacing.lg
-                        ){
-                            categoryFilter
-                            listingsSection(listings: viewModel.displayedListings)
+                    VStack(spacing: AppSpacing.xs) {
+                        categoryFilter
+                            .padding(.horizontal, AppSpacing.lg)
+
+                        ScrollView {
+                            LazyVStack(
+                                alignment: .leading,
+                                spacing: AppSpacing.lg
+                            ){
+                                listingsSection(
+                                    listings: viewModel.displayedListings
+                                )
+                            }
+                            .padding(.horizontal, AppSpacing.lg)
+                            .padding(.bottom, AppSpacing.xl)
                         }
-                        .padding(.horizontal, AppSpacing.lg)
-                        .padding(.bottom, AppSpacing.xl)
+                        .id(viewModel.selectedCategory?.id ?? 0)
+                        .background(Color.appBackground)
                     }
-                    .background(Color.appBackground)
                 case .empty:
                     EmptyStateView() {
                         Task { await viewModel.loadInitialData() }
@@ -139,7 +146,7 @@ private extension ListingsView {
                 }
             } label: {
                 Text(title)
-                    .font(isSelected ? AppTypography.subheadlineSemibold: AppTypography.subheadlineRegular)
+                    .font(isSelected ? AppTypography.subheadlineSemibold: AppTypography.subheadlineMedium)
                     .foregroundStyle(isSelected ? .white : Color.appText)
                     .padding(.horizontal, AppSpacing.md)
                     .padding(.vertical, AppSpacing.sm)
