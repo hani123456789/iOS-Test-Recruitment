@@ -21,7 +21,7 @@ enum AppTypography {
     static let body = Font.body
     static let subheadline = Font.subheadline
     static let subheadlineSemibold = Font.subheadline.weight(.semibold)
-    static let subheadlineRegular = Font.subheadline.weight(.regular)
+    static let subheadlineMedium = Font.subheadline.weight(.medium)
     static let emptyStateIcon = Font.system(size: 36)
 
     // MARK: - Caption
